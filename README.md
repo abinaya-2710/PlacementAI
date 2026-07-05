@@ -438,9 +438,6 @@ GitHub
 
 https://github.com/abinaya-2710
 
-LinkedIn
-
-(Add your LinkedIn URL)
 
 ---
 
