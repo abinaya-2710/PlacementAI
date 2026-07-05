@@ -181,6 +181,19 @@ def create_app(config_class=None) -> Flask:
                         description=desc, source=source, order_index=i
                     ))
                 db.session.commit()
+
+                # 3. Create default admin user if database has no users
+                from models.user import User
+                from services.auth_service import register_user
+                if User.query.count() == 0:
+                    register_user({
+                        'full_name': 'Admin User',
+                        'email': 'admin@email.com',
+                        'password': 'password123',
+                        'role': 'admin'
+                    })
+                    app.logger.info("👥 Default admin user created (admin@email.com / password123)")
+
                 app.logger.info("✅ Auto-seeding completed successfully!")
             except Exception as e:
                 db.session.rollback()
