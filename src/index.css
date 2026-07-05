@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────── */
+:root {
+  --brand:        #aa3bff;
+  --brand-dark:   #8a1fe0;
+  --brand-light:  #c084fc;
+
+  /* Neutral */
+  --bg:           #ffffff;
+  --bg-muted:     #f9f8fc;
+  --border:       #e5e4e7;
+  --text:         #6b6375;
+  --text-h:       #08060d;
+
+  /* Feedback */
+  --success:      #22c55e;
+  --warning:      #f59e0b;
+  --error:        #ef4444;
+  --info:         #3b82f6;
+}
+
+html.dark {
+  --brand:        #c084fc;
+  --brand-dark:   #a855f7;
+  --brand-light:  #e9d5ff;
+
+  --bg:           #16171d;
+  --bg-muted:     #1f2028;
+  --border:       #2e303a;
+  --text:         #9ca3af;
+  --text-h:       #f3f4f6;
+}
+
+/* ── Base resets ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}

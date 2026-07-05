@@ -1,0 +1,29 @@
+# PlacePrep AI — Backend Dependencies
+# Python 3.14+
+
+# Core framework
+Flask==3.1.2
+
+# Database
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.41
+
+# Authentication
+Flask-JWT-Extended==4.7.1
+
+# Password hashing
+Flask-Bcrypt==1.0.1
+bcrypt==4.3.0
+
+# CORS
+Flask-Cors==5.0.1
+
+# Environment variables
+python-dotenv==1.1.0
+
+# Serialization / validation
+marshmallow==3.26.1
+flask-marshmallow==1.2.1
+
+# Utilities
+email-validator==2.2.0
