@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Flask-Python-black?logo=flask" />
   <img src="https://img.shields.io/badge/SQLite-Database-blue?logo=sqlite" />
   <img src="https://img.shields.io/badge/TailwindCSS-Frontend-38B2AC?logo=tailwind-css" />
-  <img src="https://img.shields.io/badge/License-MIT-green" />
+  
 </p>
 
 ## 📖 About
