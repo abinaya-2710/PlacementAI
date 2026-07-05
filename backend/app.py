@@ -102,12 +102,88 @@ def create_app(config_class=None) -> Flask:
         if Roadmap.query.count() == 0:
             app.logger.info("🌱 Database is empty. Running auto-seeding...")
             try:
-                from migrations.seed_roadmaps import seed as seed_roadmaps
-                from migrations.seed_all import seed as seed_all
-                seed_roadmaps(reset=False)
-                seed_all(reset=False)
+                # 1. Seed Roadmaps
+                from migrations.seed_roadmaps import ROADMAP_DATA
+                from models.roadmap import Topic
+                for rm_data in ROADMAP_DATA:
+                    roadmap = Roadmap(
+                        slug=rm_data["slug"],
+                        title=rm_data["title"],
+                        description=rm_data["description"],
+                        icon=rm_data["icon"],
+                        category=rm_data["category"],
+                        estimated_hours=rm_data["estimated_hours"],
+                        order_index=rm_data["order_index"],
+                    )
+                    db.session.add(roadmap)
+                    db.session.commit()
+                    
+                    for idx, (title, diff, level, mins, _) in enumerate(rm_data["topics"]):
+                        topic = Topic(
+                            roadmap_id=roadmap.id,
+                            title=title,
+                            description="",
+                            difficulty=diff,
+                            level=level,
+                            order_index=idx,
+                            estimated_minutes=mins,
+                            is_published=True,
+                        )
+                        db.session.add(topic)
+                    db.session.commit()
+
+                # 2. Seed Coding problems, Aptitude, Companies, Interview questions, Resources
+                from migrations.seed_all import PROBLEMS, APTITUDE_QUESTIONS, COMPANIES, INTERVIEW_QUESTIONS, RESOURCES
+                from models.practice import Problem
+                from models.aptitude import AptitudeQuestion
+                from models.company import Company
+                from models.interview import InterviewQuestion
+                from models.resource import Resource
+
+                # Problems
+                for title, topic, diff, comps in PROBLEMS:
+                    db.session.add(Problem(
+                        title=title, topic=topic, difficulty=diff, companies=comps,
+                        slug=title.lower().replace(" ", "-"), is_published=True, order_index=0
+                    ))
+                db.session.commit()
+                
+                # Aptitude
+                for cat, topic, diff, q, a, b, c, d, correct, exp in APTITUDE_QUESTIONS:
+                    db.session.add(AptitudeQuestion(
+                        category=cat, topic=topic, difficulty=diff, question=q,
+                        option_a=a, option_b=b, option_c=c, option_d=d,
+                        correct=correct, explanation=exp
+                    ))
+                db.session.commit()
+                
+                # Companies
+                for name, slug, ctype, diff, logo, rounds, roles, ctc, order, process, skills in COMPANIES:
+                    db.session.add(Company(
+                        name=name, slug=slug, type=ctype, difficulty=diff, logo_abbr=logo,
+                        interview_rounds=rounds, roles=roles, ctc_range=ctc, order_index=order,
+                        hiring_process=process, required_skills=skills
+                    ))
+                db.session.commit()
+                
+                # Interview questions
+                for i, (cat, topic, q, ans, tips, company, starred) in enumerate(INTERVIEW_QUESTIONS):
+                    db.session.add(InterviewQuestion(
+                        category=cat, topic=topic, question=q, model_answer=ans,
+                        tips=tips, company_name=company, is_starred=starred, order_index=i
+                    ))
+                db.session.commit()
+                
+                # Resources
+                for i, (rtype, topic, title, url, desc, source) in enumerate(RESOURCES):
+                    db.session.add(Resource(
+                        type=rtype, topic=topic, title=title, url=url,
+                        description=desc, source=source, order_index=i
+                    ))
+                db.session.commit()
                 app.logger.info("✅ Auto-seeding completed successfully!")
             except Exception as e:
+                db.session.rollback()
                 app.logger.error(f"❌ Auto-seeding failed: {str(e)}")
 
     app.logger.info(
