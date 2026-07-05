@@ -447,11 +447,7 @@ If you found this project useful,
 
 ⭐ Star this repository.
 
----
 
-# 📜 License
-
-This project is licensed under the MIT License.
 
 ---
 
