@@ -97,6 +97,19 @@ def create_app(config_class=None) -> Flask:
         db.create_all()
         app.logger.info("✅ Database tables created / verified.")
 
+        # Auto-seed if database has no roadmaps
+        from models.roadmap import Roadmap
+        if Roadmap.query.count() == 0:
+            app.logger.info("🌱 Database is empty. Running auto-seeding...")
+            try:
+                from migrations.seed_roadmaps import seed as seed_roadmaps
+                from migrations.seed_all import seed as seed_all
+                seed_roadmaps(reset=False)
+                seed_all(reset=False)
+                app.logger.info("✅ Auto-seeding completed successfully!")
+            except Exception as e:
+                app.logger.error(f"❌ Auto-seeding failed: {str(e)}")
+
     app.logger.info(
         "🚀 PlacePrep AI API started  |  ENV=%s  |  DB=%s",
         app.config.get("FLASK_ENV", "development"),
