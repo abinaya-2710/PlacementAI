@@ -27,3 +27,5 @@ flask-marshmallow==1.2.1
 
 # Utilities
 email-validator==2.2.0
+
+gunicorn==23.0.0
